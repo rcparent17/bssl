@@ -1,3 +1,5 @@
+# run with powershell command > py -m poetry run python bssl.py
+
 import sys, os
 
 import random
@@ -47,14 +49,16 @@ class Player:
 class Team:
     id: str
     name: str
+    stadium: str
     owner: str
     active_roster: list[Player]
     bench: list[Player]
     record: tuple[int, int, int] # (wins, losses, ties)
 
-    def __init__(self, owner, name):
+    def __init__(self, owner, name, stadium):
         self.owner = owner
         self.name = name
+        self.stadium = stadium
         self.record = (0, 0, 0)
         self.id = gen_id()
         self.active_roster = []
@@ -66,7 +70,7 @@ class Team:
 
     def __str__(self):
         out = ""
-        out += f"Team: {self.name}\nOwner: {self.owner}\nRecord: {self.record[0]} wins, {self.record[1]} losses, {self.record[2]} ties\n\nActive roster:\n"
+        out += f"Team: {self.name}\nOwner: {self.owner}\nStadium: {self.stadium}\nRecord: {self.record[0]} wins, {self.record[1]} losses, {self.record[2]} ties\n\nActive roster:\n"
         for player in self.active_roster:
             out += f"\t{player.first_name} {player.last_name} ({player.current_team}) - {player.off_skill} offensive rating, {player.def_skill} defensive rating - "
             out += f"season number {player.num_seasons_played} - Injured: {player.injury_status.is_injured}\n"
@@ -79,8 +83,8 @@ class Team:
 def main():
     random.seed(time.time())
 
-    t1 = Team(owner="Reilly", name="The Devs")
-    t2 = Team(owner="Reilly", name="The Bugs")
+    t1 = Team(owner="Reilly", name="The Devs", stadium="Silicon Valley Field")
+    t2 = Team(owner="Reilly", name="The Bugs", stadium="Errorville Stadium")
     print(t1)
     print(t2)
 
