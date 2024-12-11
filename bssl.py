@@ -54,6 +54,8 @@ class Team:
     active_roster: list[Player]
     bench: list[Player]
     record: tuple[int, int, int] # (wins, losses, ties)
+    average_off: int
+    average_def: int
 
     def __init__(self, owner, name, stadium):
         self.owner = owner
@@ -62,15 +64,22 @@ class Team:
         self.record = (0, 0, 0)
         self.id = gen_id()
         self.active_roster = []
+        total_off: int = 0
+        total_def: int = 0
         for i in range(6):
-            self.active_roster.append(Player(random.choice(FIRST_NAMES), random.choice(LAST_NAMES), self.name))
+            p = Player(random.choice(FIRST_NAMES), random.choice(LAST_NAMES), self.name)
+            total_off += p.off_skill
+            total_def += p.def_skill
+            self.active_roster.append(p)
+        self.average_off = (total_off / 6.0).__floor__()
+        self.average_def = (total_def / 6.0).__floor__()
         self.bench = []
         for i in range(4):
             self.bench.append(Player(random.choice(FIRST_NAMES), random.choice(LAST_NAMES), self.name))
 
     def __str__(self):
         out = ""
-        out += f"Team: {self.name}\nOwner: {self.owner}\nStadium: {self.stadium}\nRecord: {self.record[0]} wins, {self.record[1]} losses, {self.record[2]} ties\n\nActive roster:\n"
+        out += f"Team: {self.name}\nOwner: {self.owner}\nStadium: {self.stadium}\nRecord: {self.record[0]} wins, {self.record[1]} losses, {self.record[2]} ties\n\nActive roster: ({self.average_off} OFF, {self.average_def} DEF)\n"
         for player in self.active_roster:
             out += f"\t{player.first_name} {player.last_name} ({player.current_team}) - {player.off_skill} offensive rating, {player.def_skill} defensive rating - "
             out += f"season number {player.num_seasons_played} - Injured: {player.injury_status.is_injured}\n"
@@ -79,6 +88,19 @@ class Team:
                     out += f"\t{player.first_name} {player.last_name} ({player.current_team}) - {player.off_skill} offensive rating, {player.def_skill} defensive rating - "
                     out += f"season number {player.num_seasons_played} - Injured: {player.injury_status.is_injured}\n"
         return out
+
+    def update_active_average_skill(self):
+        total_off: float = 0
+        total_def: float = 0
+        for p in self.active_roster:
+            total_off += p.off_skill
+            total_def += p.def_skill
+        self.average_off = (total_off / 6.0).__floor__()
+        self.average_def = (total_def / 6.0).__floor__()
+
+class Game:
+    home_team: Team
+    away_team: Team
 
 def main():
     random.seed(time.time())
