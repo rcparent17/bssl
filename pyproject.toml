@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "bssl"
+version = "0.1.0"
+description = "boi squadd soccer league"
+authors = ["Reilly Parent"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {git = "https://github.com/fastapi/fastapi.git"}
+uvicorn = {git = "https://github.com/encode/uvicorn.git"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
